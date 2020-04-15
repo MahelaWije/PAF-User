@@ -152,3 +152,5 @@ public class User {
 		return output;
 	}
 }
+
+//Model Class
