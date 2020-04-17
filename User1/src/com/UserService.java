@@ -13,13 +13,13 @@ import org.jsoup.nodes.Document;
 
 @Path("/Users")
 public class UserService {
-	User itemObj = new User();
+	User userObj = new User();
 
 	@GET
 	@Path("/")
 	@Produces(MediaType.TEXT_HTML)
 	public String readUsers() {
-		return itemObj.readUsers();
+		return userObj.readUsers();
 	}
 
 	@POST
@@ -29,7 +29,7 @@ public class UserService {
 	public String addUserDetails(@FormParam("username") String username, @FormParam("phoneNo") String phoneNo,
 			@FormParam("age") String age, @FormParam("address") String address, @FormParam("gender") String gender,
 			@FormParam("email") String email) {
-		String output = itemObj.addUserDetails(username, phoneNo, age, address, gender, email);
+		String output = userObj.addUserDetails(username, phoneNo, age, address, gender, email);
 		return output;
 	}
 
@@ -39,16 +39,16 @@ public class UserService {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateUserDetails(String userData) {
 		// Convert the input string to a JSON object
-		JsonObject itemObject = new JsonParser().parse(userData).getAsJsonObject();
+		JsonObject userObject = new JsonParser().parse(userData).getAsJsonObject();
 		// Read the values from the JSON object
-		String user_id = itemObject.get("user_id").getAsString();
-		String username = itemObject.get("username").getAsString();
-		String phoneNo = itemObject.get("phoneNo").getAsString();
-		String age = itemObject.get("age").getAsString();
-		String address = itemObject.get("address").getAsString();
-		String gender = itemObject.get("gender").getAsString();
-		String email = itemObject.get("email").getAsString();
-		String output = itemObj.updateUserDetails(user_id, username, phoneNo, age, address, gender, email);
+		String user_id = userObject.get("user_id").getAsString();
+		String username = userObject.get("username").getAsString();
+		String phoneNo = userObject.get("phoneNo").getAsString();
+		String age = userObject.get("age").getAsString();
+		String address = userObject.get("address").getAsString();
+		String gender = userObject.get("gender").getAsString();
+		String email = userObject.get("email").getAsString();
+		String output = userObj.updateUserDetails(user_id, username, phoneNo, age, address, gender, email);
 		return output;
 	}
 
@@ -62,9 +62,16 @@ public class UserService {
 
 		// Read the value from the element <userID>
 		String user_id = doc.select("user_id").text();
-		String output = itemObj.deleteUsers(user_id);
+		String output = userObj.deleteUsers(user_id);
 		return output;
+	}
+	
+	@GET
+	@Path("/{user_id}")
+	@Produces(MediaType.TEXT_HTML)
+	public String readSelectedUsers(@PathParam("user_id") String user_id) {
+		return userObj.readSelectedUsers(user_id);
+		
 	}
 
 }
-

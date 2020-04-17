@@ -151,6 +151,54 @@ public class User {
 		}
 		return output;
 	}
+	
+	public String readSelectedUsers(String user_id) {
+		String output = "";
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for reading.";
+			}
+			// Prepare the html table to be displayed
+			output = "<table border=\"1\"><tr><th>User Name</th><th>Phone No</th><th>Age</th><th>Address</th><th>Gender</th><th>Email</th></tr>";
+			String query = "select * from users where user_id="+user_id;
+			Statement stmt = (Statement) con.createStatement();
+			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+			// iterate through the rows in the result set
+			while (rs.next()) {
+				String userID = Integer.toString(rs.getInt("user_id"));
+				String userName = rs.getString("username");
+				String phoneNo = rs.getString("phoneNo");
+				String age = Integer.toString(rs.getInt("age"));
+				String address = rs.getString("address");
+				String gender = rs.getString("gender");
+				String email = rs.getString("email");
+				// Add into the html table
+				output += "<tr><td>" + userName + "</td>";
+				output += "<td>" + phoneNo + "</td>";
+				output += "<td>" + age + "</td>";
+				output += "<td>" + address + "</td>";
+				output += "<td>" + gender + "</td>";
+				output += "<td>" + email + "</td>";
+				// buttons
+				/*
+				 * output +=
+				 * "<td><input name=\"btnUpdate\" type=\"button\"value=\"Update\" class=\"btn btn-secondary\"></td>"
+				 * + "<td><form method=\"post\" action=\"items.jsp\">" +
+				 * "<input name=\"btnRemove\" type=\"submit\" value=\"Remove\"class=\"btn btn-danger\">"
+				 * + "<input name=\"userID\" type=\"hidden\" value=\"" + userID + "\">" +
+				 * "</form></td></tr>";
+				 */
+			}
+			con.close();
+			// Complete the html table
+			output += "</table>";
+		} catch (Exception e) {
+			output = "Error while reading the users.";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
 }
 
 
