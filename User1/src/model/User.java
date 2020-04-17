@@ -1,6 +1,8 @@
 package model;
 
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,7 +16,8 @@ public class User {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			// Provide the correct details: DBServer/DBName, username, password
-			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/paf?useTimezone=true&serverTimezone=UTC", "root", "");
+			con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/paf?useTimezone=true&serverTimezone=UTC",
+					"root", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -151,7 +154,7 @@ public class User {
 		}
 		return output;
 	}
-	
+
 	public String readSelectedUsers(String user_id) {
 		String output = "";
 		try {
@@ -161,7 +164,7 @@ public class User {
 			}
 			// Prepare the html table to be displayed
 			output = "<table border=\"1\"><tr><th>User Name</th><th>Phone No</th><th>Age</th><th>Address</th><th>Gender</th><th>Email</th></tr>";
-			String query = "select * from users where user_id="+user_id;
+			String query = "select * from users where user_id=" + user_id;
 			Statement stmt = (Statement) con.createStatement();
 			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
 			// iterate through the rows in the result set
@@ -199,6 +202,46 @@ public class User {
 		}
 		return output;
 	}
+
+	public String readUsersPaymentHistory(String user_id) {
+		String output = "";
+		try {
+			Connection con = connect();
+			if (con == null) {
+				return "Error while connecting to the database for reading.";
+			}
+			// Prepare the html table to be displayed
+			output = "<table border=\"1\"><tr><th>Payment ID</th><th>User ID</th><th>Paymment Method</th><th>Payment time</th><th>Purpose</th><th>Amount</th><th>Statues</th></tr>";
+			String query = "select * from payment where user_id=" + user_id;
+			Statement stmt = (Statement) con.createStatement();
+			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
+			// iterate through the rows in the result set
+			while (rs.next()) {
+				String paymentid = Integer.toString(rs.getInt("payment_id"));
+				String userId = Integer.toString(rs.getInt("user_id"));
+				String paymentMethod = rs.getString("Payment_method");
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+				String paymentTime = dateFormat.format(rs.getDate("paid_time"));
+				String purpose = rs.getString("purpose");
+				String Amount = Float.toString(rs.getFloat("amount"));
+				String statues = rs.getString("status");
+
+				// Add into the html table
+				output += "<tr><td>" + paymentid + "</td>";
+				output += "<td>" + userId + "</td>";
+				output += "<td>" + paymentMethod + "</td>";
+				output += "<td>" + paymentTime + "</td>";
+				output += "<td>" + purpose + "</td>";
+				output += "<td>" + Amount + "</td>";
+				output += "<td>" + statues + "</td>";
+			}
+			con.close();
+			// Complete the html table
+			output += "</table>";
+		} catch (Exception e) {
+			output = "Error while reading the users payments.";
+			System.err.println(e.getMessage());
+		}
+		return output;
+	}
 }
-
-

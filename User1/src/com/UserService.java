@@ -73,5 +73,13 @@ public class UserService {
 		return userObj.readSelectedUsers(user_id);
 		
 	}
+	
+	@GET
+	@Path("/UsersPayments/{user_id}")
+	@Produces(MediaType.TEXT_HTML)
+	public String readUsersPaymentHistory(@PathParam("user_id") String user_id) {
+		return userObj.readUsersPaymentHistory(user_id);
+		//payment details for selected user
+	}
 
 }
