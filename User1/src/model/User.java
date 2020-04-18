@@ -211,13 +211,14 @@ public class User {
 				return "Error while connecting to the database for reading.";
 			}
 			// Prepare the html table to be displayed
-			output = "<table border=\"1\"><tr><th>Payment ID</th><th>User ID</th><th>Paymment Method</th><th>Payment time</th><th>Purpose</th><th>Amount</th><th>Statues</th></tr>";
+			output = "<table border=\"1\"><tr><th>Payment ID</th><th>Appointment ID</th><th>User ID</th><th>Paymment Method</th><th>Payment time</th><th>Purpose</th><th>Amount</th><th>Statues</th></tr>";
 			String query = "select * from payment where user_id=" + user_id;
 			Statement stmt = (Statement) con.createStatement();
 			ResultSet rs = ((java.sql.Statement) stmt).executeQuery(query);
 			// iterate through the rows in the result set
 			while (rs.next()) {
 				String paymentid = Integer.toString(rs.getInt("payment_id"));
+				String appointmentId = Integer.toString(rs.getInt("appointment_id"));
 				String userId = Integer.toString(rs.getInt("user_id"));
 				String paymentMethod = rs.getString("Payment_method");
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
@@ -228,6 +229,7 @@ public class User {
 
 				// Add into the html table
 				output += "<tr><td>" + paymentid + "</td>";
+				output += "<td>" + appointmentId + "</td>";
 				output += "<td>" + userId + "</td>";
 				output += "<td>" + paymentMethod + "</td>";
 				output += "<td>" + paymentTime + "</td>";
